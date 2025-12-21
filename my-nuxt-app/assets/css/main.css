@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Layout Styles */
+  .layout-container {
+    @apply min-h-screen flex flex-col;
+  }
+
+  .navbar {
+    @apply h-16 border-b border-border flex items-center justify-between px-6 sticky top-0 z-50;
+  }
+
+  .brand {
+    @apply flex items-center gap-2;
+  }
+
+  .logo {
+    @apply w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold;
+  }
+
+  .title {
+    @apply text-lg font-bold text-primary;
+  }
+
+  .nav-menu {
+    @apply flex items-center gap-6 text-sm font-medium;
+  }
+
+  .nav-link {
+    @apply text-foreground hover:text-primary transition-colors;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition;
+  }
+
+  .main-content {
+    @apply flex-1 p-6;
+  }
+
+  .footer {
+    @apply h-14 border-t border-border flex items-center justify-center text-sm text-muted-foreground;
+  }
+
+  /* Home Page */
+  .page-container {
+    @apply flex flex-col items-center justify-center min-h-[80vh] text-center px-4;
+  }
+
+  .hero-section {
+    @apply space-y-6 max-w-3xl animate-fade-in;
+  }
+
+  .badge {
+    @apply inline-block px-4 py-1.5 rounded-full border border-border glass-effect text-xs font-medium text-primary mb-4;
+  }
+
+  .hero-title {
+    @apply text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight;
+  }
+
+  .highlight-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400;
+  }
+
+  .hero-desc {
+    @apply text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed;
+  }
+
+  .cta-group {
+    @apply flex flex-col sm:flex-row items-center justify-center gap-4 pt-8;
+  }
+
+  .btn-start {
+    @apply px-8 py-4 rounded-lg bg-primary text-primary-foreground font-semibold text-lg hover:opacity-90 hover:scale-105 transition-all shadow-[0_0_20px_rgba(59,130,246,0.5)];
+  }
+
+  .btn-demo {
+    @apply px-8 py-4 rounded-lg border border-border text-foreground font-semibold text-lg hover:bg-accent transition-all;
+  }
+
+  .feature-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6 mt-24 w-full max-w-6xl animate-fade-in;
+    animation-delay: 0.2s;
+  }
+
+  .feature-card {
+    @apply p-6 rounded-xl border border-border hover:border-primary transition-colors;
+  }
+
+  .icon-box {
+    @apply w-12 h-12 rounded-lg bg-primary bg-opacity-10 flex items-center justify-center mb-4 group-hover:bg-opacity-20 transition;
+  }
+
+  .card-title {
+    @apply text-xl font-bold mb-2;
+  }
+
+  .card-desc {
+    @apply text-muted-foreground;
+  }
+
+  /* Login Page */
+  .login-container {
+    @apply max-w-md mx-auto mt-20 p-8 rounded-xl border border-border;
+  }
+
+  .login-title {
+    @apply text-2xl font-bold text-primary mb-6 text-center;
+  }
+
+  .login-desc {
+    @apply text-muted-foreground text-center;
+  }
+
+  /* Stocks Page */
+  .stocks-container {
+    @apply max-w-4xl mx-auto py-10;
+  }
+
+  .page-title {
+    @apply text-3xl font-bold text-primary mb-8;
+  }
+
+  .charts-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+  }
+
+  .chart-card {
+    @apply p-6 rounded-xl border border-border h-64 flex items-center justify-center;
+  }
+
+  .placeholder-text {
+    @apply text-muted-foreground;
+  }
+}
+
+@layer utilities {
+  .glass-effect {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+  }
+}
+
+:root {
+  /* Background (Deep Blue/Black) */
+  --background: 222.2 84% 4.9%;
+  /* Foreground (Off White) */
+  --foreground: 210 40% 98%;
+  
+  /* Primary (Bright Blue) */
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  
+  /* Secondary (Mute Blue-Grey) */
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  
+  /* Muted */
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  
+  /* Accent */
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  
+  /* Destructive (Red) */
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  
+  /* Border & Input */
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  
+  /* Ring */
+  --ring: 224.3 76.3% 48%;
+  
+  /* Radius */
+  --radius: 0.5rem;
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Inter', sans-serif;
+  /* Fixed Linear Gradient Background */
+  background-image: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 100vh;
+}
+
+/* Global Transitions */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
