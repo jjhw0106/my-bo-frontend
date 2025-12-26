@@ -6,7 +6,8 @@ export const usePagePermissions = () => {
         '/dashboard',
         '/mypage',
         '/admin',
-        '/my-career'
+        '/my-career',
+        '/settings'
     ]);
 
     // 주어진 경로가 보호된 경로인지 확인
