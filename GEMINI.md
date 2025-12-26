@@ -1,3 +1,16 @@
+# 0. 작업 원칙 (Working Principles)
+* **선 설명 후 조치 (Explain First, Act Later)**: 코드를 수정하거나 파일을 생성하기 전에, **반드시** 구현 계획과 변경 내용을 사용자에게 먼저 설명한다.
+* **사용자 승인 필수**: 사용자의 명확한 **동의(컨펌)**가 떨어진 후에만 실제 코드 변경을 진행한다.
+
+* 커밋 실행 가이드 (Commit Execution Guide)
+  - **멀티라인 메시지 처리**: 커밋 메시지가 길거나 여러 줄(Multi-line)로 구성된 경우, 쉘 명령어 파싱 오류를 방지하기 위해 **반드시** 별도의 텍스트 파일(예: `commit_msg.txt`)에 메시지를 작성한 뒤 `git commit -F <파일명>` 옵션을 사용하여 커밋합니다.
+  - **권장 절차**:
+    1. `write_file`: `commit_msg.txt` 생성 (메시지 내용 작성)
+    2. `run_shell_command`: `git commit -F commit_msg.txt`
+    3. `run_shell_command`: `del commit_msg.txt` (Windows) 또는 `rm commit_msg.txt` (Mac/Linux)
+
+
+
 # Frontend 아키텍쳐
 # Nuxt 3 Modern Front-End Architecture Guide
 
