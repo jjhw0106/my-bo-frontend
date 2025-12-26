@@ -10,18 +10,21 @@ const handleLogout = async () => {
   <div class="layout-container">
     <!-- Top Navbar -->
     <header class="navbar glass-effect">
-      <div class="brand">
-        <div class="logo">M</div>
-        <h1 class="title">My App</h1>
-      </div>
+      <NuxtLink to="/">
+          <div class="brand">
+          <div class="logo">M</div>
+          <h1 class="title">My App</h1>
+        </div>
+      </NuxtLink>
       
       <nav class="nav-menu">
         <NuxtLink to="/" class="nav-link">Home</NuxtLink>
         <NuxtLink to="/stocks" class="nav-link">주식</NuxtLink>
+        <NuxtLink to="/my-career" class="nav-link">My-Career</NuxtLink>
         
         <!-- 로그인 상태에 따른 조건부 렌더링 -->
         <div v-if="user" class="flex flex-col items-end gap-1">
-          <span class="text-sm font-medium text-foreground">{{ user.email }}님 환영합니다</span>
+          <span class="text-sm font-medium text-foreground">{{ user.name }}님 환영합니다</span>
           <button 
             @click="handleLogout" 
             class="text-xs text-muted-foreground hover:text-destructive transition-colors"
