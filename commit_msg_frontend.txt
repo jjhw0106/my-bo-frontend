@@ -1,0 +1,15 @@
+feat(frontend): My Career 페이지 고도화 및 스크래퍼 연동
+
+- My Career 페이지 구조 개편 및 동적 라우팅 구현:
+  - 기존 index 페이지를 /my-career/overview로 이동
+  - /my-career/[platform] 동적 페이지 신설로 플랫폼별 상세 대응
+- 대시보드 레이아웃(dashboard.vue) 개선:
+  - 서브메뉴(아코디언) 지원 및 현재 경로에 따른 자동 활성화/타이틀 표시
+- 신규 컴포넌트 개발:
+  - LoginModal: 단일/다중 플랫폼 대응 계정 정보 입력 및 수동 로그인 유도
+  - ScrapeButton: 플랫폼별 브랜드 컬러 및 로딩 애니메이션 적용
+- 비즈니스 로직 분리 및 강화:
+  - useScraper: 스크래퍼 서버 연동, 다중 플랫폼 스크래핑 지원
+  - usePagePermissions: 중앙 집중형 권한 관리 및 전역 미들웨어(auth.global.ts) 연동
+- 기타:
+  - GEMINI.md 작업 원칙 업데이트 및 오늘자 개발일지 작성

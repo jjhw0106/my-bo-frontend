@@ -1,0 +1,64 @@
+[33mcommit dc548255ed013ba45390e7d82549c100ac76505d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: howon <jjhw0106@naver.com>
+Date:   Sat Dec 27 01:27:28 2025 +0900
+
+    개발일지 추가
+
+[33mcommit 11750c71140278743accf33ca03b690270aaaedd[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: howon <jjhw0106@naver.com>
+Date:   Sat Dec 27 01:23:50 2025 +0900
+
+    refactor(layout): 대시보드 사이드바 구조 개선 및 My Career 하위 메뉴 추가
+    
+    - layouts/dashboard.vue:
+      - 하드코딩된 메뉴를 `menuItems` 배열 기반의 렌더링으로 변경하여 확장성 확보
+      - 하위 메뉴(Submenu) 토글 기능 및 현재 경로 기반 자동 펼침(Auto-expand) 구현
+      - 'My Career' (Overview, Wanted, JobKorea, Saramin) 및 'Settings' 메뉴 추가
+      - 페이지 타이틀 동적 계산 로직 및 홈 이동 버튼 추가
+      - 스크롤바 커스텀 스타일(custom-scrollbar) 적용
+    
+    - pages/my-career/index.vue:
+      - 기존 대시보드 컨텐츠를 `overview.vue`로 이관하기 위해 로직 제거
+      - 진입 시 `/my-career/overview`로 즉시 리다이렉트되도록 미들웨어 설정
+    
+    - composables/usePagePermissions.ts:
+      - 접근 허용 경로에 `/settings` 추가
+
+[33mcommit e7c4321399acf361011cfc6afbd29c4777fa6b41[m
+Author: howon <jjhw0106@naver.com>
+Date:   Fri Dec 26 19:40:06 2025 +0900
+
+    gemini.md 커밋 메시지 작성 원칙 추가
+
+[33mcommit 1942624acfd1fb0c50bab7475da568fcee3d0142[m
+Merge: c64a6aa 0a3b88b
+Author: howon <jjhw0106@naver.com>
+Date:   Fri Dec 26 19:35:56 2025 +0900
+
+    Merge branch 'master' of https://github.com/jjhw0106/my-bo-frontend
+
+[33mcommit c64a6aad34b29513fc2a2e6874dbc1abf4d466da[m
+Author: howon <jjhw0106@naver.com>
+Date:   Fri Dec 26 19:33:32 2025 +0900
+
+    refactor: 프로젝트 디렉토리 구조 재편 및 미들웨어 설정 업데이트
+    
+    - my-nuxt-app 디렉토리의 파일들을 frontend 루트로 이동
+    
+    - auth 미들웨어를 글로벌 설정(auth.global.ts)으로 변경
+    
+    - 신규 컴포저블(usePagePermissions) 및 페이지(my-career) 추가
+
+[33mcommit 0a3b88b0b5e93beb285e2af6ffbc12954c797837[m
+Author: jjhw0106 <66353424+jjhw0106@users.noreply.github.com>
+Date:   Sun Dec 21 18:33:59 2025 +0900
+
+    개발일지
+    
+    251221
+
+[33mcommit 548f36da3d0c7b2d6e238b6b697890fe5542ed31[m
+Author: howon <jjhw0106@naver.com>
+Date:   Sun Dec 21 18:31:32 2025 +0900
+
+    mybo 프론트 nuxt 바이브코딩

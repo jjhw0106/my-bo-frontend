@@ -9,6 +9,10 @@
     2. `run_shell_command`: `git commit -F commit_msg.txt`
     3. `run_shell_command`: `del commit_msg.txt` (Windows) 또는 `rm commit_msg.txt` (Mac/Linux)
 
+* 개발일지 작성 위치
+  - 개발일지 md파일 작성은 C:\Users\jhw\workspace\my-backoffice\개발일지/ 해당 경로에 적절한 디렉토리 하위에 작성한다.
+  - 예를 들어, front 관련 개발일지는 /front 하위에 작성
+  - 네이밍 규칙은 '251227_프론트'와 같이 날짜_프로젝트명 으로 하고 해당 파일의 양식을 참고하여 작성한다.
 
 
 # Frontend 아키텍쳐

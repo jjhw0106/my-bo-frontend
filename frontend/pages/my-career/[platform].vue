@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import ScrapeButton from '~/components/domain/ScrapeButton.vue';
+import LoginModal from '~/components/domain/LoginModal.vue';
+
 const route = useRoute();
+const { isScraping, scrapePlatform } = useScraper();
 
 // 플랫폼별 데이터 매핑
 const platformMap: Record<string, any> = {
@@ -17,19 +21,27 @@ definePageMeta({
   layout: 'dashboard'
 });
 
-// 스크래핑 상태 관리
-const isScraping = ref(false);
+// 모달 상태
+const isModalOpen = ref(false);
 
-const handleScraping = async () => {
-  isScraping.value = true;
+const handleScrapingClick = () => {
+  isModalOpen.value = true;
+};
+
+const handleLoginSubmit = async (credentialsMap: Record<string, { id: string; pw: string }>) => {
+  isModalOpen.value = false;
   
-  // TODO: Playwright MCP 또는 백엔드 스크래퍼 API 호출
-  // 예: await $fetch(`/api/scrape/${platformId.value}`)
-  
-  setTimeout(() => {
-    isScraping.value = false;
-    alert(`${platformInfo.value.name}의 최신 지원 정보를 성공적으로 가져왔습니다.`);
-  }, 3000);
+  // 현재 플랫폼의 계정 정보 추출
+  const creds = credentialsMap[platformId.value];
+  if (creds) {
+    await scrapePlatform(platformId.value, platformInfo.value.name, creds);
+  }
+};
+
+const handleManualLogin = async () => {
+  isModalOpen.value = false;
+  // 자격 증명 없이 호출 -> 백엔드에서 수동 로그인 대기 로직 실행
+  await scrapePlatform(platformId.value, platformInfo.value.name);
 };
 </script>
 
@@ -59,27 +71,13 @@ const handleScraping = async () => {
         </div>
       </div>
 
-      <!-- Scraping Action Button -->
-      <button 
-        @click="handleScraping"
-        :disabled="isScraping"
-        class="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
-        :class="{
-          'bg-blue-600 hover:bg-blue-500 shadow-blue-900/30': platformId === 'wanted',
-          'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-900/30': platformId === 'jobkorea',
-          'bg-orange-600 hover:bg-orange-500 shadow-orange-900/30': platformId === 'saramin',
-          'bg-green-600 hover:bg-green-500 shadow-green-900/30': platformId === 'rallit',
-          'bg-gray-700 hover:bg-gray-600': !['wanted', 'jobkorea', 'saramin', 'rallit'].includes(platformId)
-        }"
-      >
-        <!-- Background Animation Effect -->
-        <span v-if="isScraping" class="absolute inset-0 bg-white/10 animate-pulse"></span>
-        
-        <span v-if="isScraping" class="animate-spin text-xl">↻</span>
-        <span v-else class="text-xl group-hover:rotate-12 transition-transform">🤖</span>
-        
-        <span>{{ isScraping ? `${platformInfo.name} 데이터 수집 중...` : `${platformInfo.name}에서 정보 가져오기` }}</span>
-      </button>
+      <!-- Scrape Button Component -->
+      <ScrapeButton 
+        :platform-id="platformId" 
+        :platform-info="platformInfo" 
+        :is-scraping="isScraping" 
+        @click="handleScrapingClick" 
+      />
     </div>
 
     <!-- Content Placeholder -->
@@ -110,5 +108,14 @@ const handleScraping = async () => {
         </p>
       </div>
     </div>
+
+    <!-- Login Modal -->
+    <LoginModal 
+      :is-open="isModalOpen" 
+      :platforms="[{ id: platformId, name: platformInfo.name }]" 
+      @close="isModalOpen = false"
+      @submit="handleLoginSubmit"
+      @manual-login="handleManualLogin"
+    />
   </div>
 </template>

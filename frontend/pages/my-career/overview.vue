@@ -1,19 +1,14 @@
 <script setup lang="ts">
+import LoginModal from '~/components/domain/LoginModal.vue';
+
 definePageMeta({
   layout: 'dashboard'
 });
 
-// 상태 관리
-const isScraping = ref(false);
+const { isScraping, scrapeMultiple } = useScraper();
 
-const runScraper = () => {
-  isScraping.value = true;
-  // TODO: Playwright MCP 호출 로직 연동
-  setTimeout(() => {
-    isScraping.value = false;
-    alert('모든 채용 사이트에서 최신 데이터를 가져왔습니다.');
-  }, 2500);
-};
+// 모달 상태
+const isModalOpen = ref(false);
 
 // 샘플 데이터: 플랫폼별 상태
 const platforms = ref([
@@ -21,6 +16,23 @@ const platforms = ref([
   { id: 'jobkorea', name: '잡코리아', status: 'connected', count: 8, icon: 'https://www.jobkorea.co.kr/favicon.ico' },
   { id: 'saramin', name: '사람인', status: 'error', count: '-', icon: 'https://www.saramin.co.kr/favicon.ico' }
 ]);
+
+// 전체 동기화 버튼 클릭 시
+const openSyncModal = () => {
+  isModalOpen.value = true;
+};
+
+// 모달에서 정보 제출 시
+const handleSyncSubmit = async (credentialsMap: Record<string, { id: string; pw: string }>) => {
+  isModalOpen.value = false;
+  
+  // 전체 동기화 실행
+  const targetPlatforms = platforms.value.map(p => ({ id: p.id, name: p.name }));
+  const results = await scrapeMultiple(targetPlatforms, credentialsMap);
+  
+  const successCount = results.filter(r => r.success).length;
+  alert(`${results.length} 중 ${successCount}개 플랫폼 동기화 완료`);
+};
 
 // 샘플 데이터: 지원 내역
 const applications = ref([
@@ -54,7 +66,7 @@ const getStatusClass = (status: string) => {
       </div>
       
       <button 
-        @click="runScraper"
+        @click="openSyncModal"
         :disabled="isScraping"
         class="group relative flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(37,99,235,0.4)]"
       >
@@ -71,7 +83,6 @@ const getStatusClass = (status: string) => {
         <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
         
         <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center p-2 shadow-lg z-10">
-          <!-- 실제 아이콘 대신 텍스트로 대체 (CORS 등 이미지 이슈 방지) -->
            <span class="text-black font-bold text-xs">{{ pf.name.substring(0, 2) }}</span>
         </div>
         
@@ -134,11 +145,14 @@ const getStatusClass = (status: string) => {
           </tbody>
         </table>
       </div>
-      
-      <!-- Empty State (데이터 없을 때) -->
-      <div v-if="applications.length === 0" class="p-12 text-center text-gray-500">
-        표시할 지원 내역이 없습니다. 동기화를 진행해주세요.
-      </div>
     </div>
+
+    <!-- Login Modal -->
+    <LoginModal 
+      :is-open="isModalOpen" 
+      :platforms="platforms.map(p => ({ id: p.id, name: p.name }))" 
+      @close="isModalOpen = false"
+      @submit="handleSyncSubmit"
+    />
   </div>
 </template>
