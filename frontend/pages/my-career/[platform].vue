@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import ScrapeButton from '~/components/domain/ScrapeButton.vue';
+  import SubButton from '~/components/domain/SubButton.vue';
   import LoginModal from '~/components/domain/LoginModal.vue';
   import { onMounted, computed } from 'vue';
 
@@ -16,6 +17,7 @@
 
   const platformId = computed(() => route.params.platform as string);
   const platformInfo = computed(() => platformMap[platformId.value] || { name: 'Unknown', color: 'gray', icon: '?' });
+  const totalApplications = computed(() => historyData.value.length);
 
   // 2. 데이터 필터링 (현재 플랫폼 데이터만)
   const filteredHistory = computed(() => {
@@ -87,17 +89,16 @@
           :is-scraping="isScraping" 
           @click="handleScrapingClick" 
         />
-        <button 
-          @click="excelDownload"
+        <SubButton 
+          label="엑셀 다운로드"
           :disabled="filteredHistory.length === 0"
-          class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          엑셀 다운로드
-        </button>
+          @click="excelDownload"
+        />
       </div>
+    </div>
+
+    <div>
+      <p>총 지원 횟수: {{ totalApplications }}</p>
     </div>
 
     <!-- Data Table -->

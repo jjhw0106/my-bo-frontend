@@ -1,0 +1,8 @@
+feat(frontend): 플랫폼별 통계 및 SubButton 컴포넌트 추가
+
+- `frontend/pages/my-career/[platform].vue`:
+  - `SubButton` 컴포넌트를 임포트하고 엑셀 다운로드 버튼으로 대체하여 UI 재사용성 향상.
+  - 해당 플랫폼의 총 지원 횟수를 페이지 상단에 표시하는 UI 추가.
+  - `useScraper`에서 `historyData`를 직접 사용해 `totalApplications` 계산.
+- `frontend/components/domain/SubButton.vue`:
+  - 재사용 가능한 보조 액션 버튼 컴포넌트 추가.

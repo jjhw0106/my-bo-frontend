@@ -1,5 +1,0 @@
-chore(frontend): `useAuth` 및 플랫폼별 ID 관리 로직 수정
-
-- `useAuth.ts`: `logout` 함수 내 `localStorage.clear()` 오타 수정.
-- `[platform].vue`: 스크래핑에 사용되는 플랫폼별 ID를 `last_user_platform_id`라는 별도의 localStorage 키로 관리하도록 의도적으로 분리.
-- 향후 `app_user_id`와 `platform_user_id`를 분리 관리하기 위한 기반 작업.
