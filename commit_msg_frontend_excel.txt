@@ -1,7 +1,0 @@
-feat(frontend): 지원 내역 엑셀 다운로드 기능 구현
-
-- `xlsx` 라이브러리를 사용하여 현재 조회된 지원 내역 데이터를 Excel 파일(.xlsx)로 다운로드하는 기능을 추가.
-- `composables/useExcel.ts`를 생성하여 엑셀 변환 및 다운로드 로직을 캡슐화.
-- `pages/my-career/[platform].vue`에 '엑셀 다운로드' 버튼을 추가하고, `useExcel` 컴포저블을 사용하여 다운로드 핸들러를 구현.
-- 데이터 조회 및 필터링, UI 렌더링 로직 안정화.
-- 리팩토링 과정에서 발생했던 프론트엔드 조회 관련 버그 수정 및 `localStorage` 연동 로직 확정.

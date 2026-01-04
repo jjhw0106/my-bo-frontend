@@ -41,6 +41,7 @@ export const useAuth = () => {
 
   const logout = () => {
     user.value = null; // 쿠키 삭제
+    localStorage.clear()
     return navigateTo('/login');
   };
 
