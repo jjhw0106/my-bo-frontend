@@ -2,13 +2,13 @@ import type { User } from '~/types/auth';
 
 export const useAuth = () => {
   const config = useRuntimeConfig();
-  
+
   // 사용자 정보 영구 저장을 위해 useCookie 사용
   const user = useCookie<User | null>('user', {
     default: () => null,
     watch: true
   });
-  
+
   const isAuthenticated = computed(() => !!user.value);
   const loading = useState('authLoading', () => false);
   const error = useState<string | null>('authError', () => null);
@@ -27,6 +27,7 @@ export const useAuth = () => {
 
       // 성공 시 사용자 정보 업데이트 (쿠키에 저장됨)
       user.value = { email: data as string, name: 'User' };
+      localStorage.setItem('last_user_id', data as string);
       return true;
     } catch (e: any) {
       // 에러 처리

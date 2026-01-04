@@ -2,13 +2,22 @@ export const useScraper = () => {
   const isScraping = ref(false);
   const error = ref<string | null>(null);
   const scrapedResults = ref<Record<string, any>>({});
+  const historyData = ref<any[]>([]);
 
-  /**
-   * 특정 플랫폼의 스크래핑을 실행합니다.
-   * @param platformId 플랫폼 식별자 (wanted, jobkorea 등)
-   * @param platformName 플랫폼 표시 이름 (알림 메시지용)
-   * @param credentials 계정 정보 (id, pw)
-   */
+  const fetchHistory = async (userId: string) => {
+    isScraping.value = true;
+    try {
+      const response: any = await $fetch(`http://localhost:4000/scraper/history/${userId}`);
+      historyData.value = response || [];
+      return response;
+    } catch (err) {
+      console.error('Fetch error:', err);
+      return [];
+    } finally {
+      isScraping.value = false;
+    }
+  };
+
   const scrapePlatform = async (
     platformId: string, 
     platformName: string, 
@@ -65,6 +74,8 @@ export const useScraper = () => {
     isScraping,
     error,
     scrapedResults,
+    historyData,
+    fetchHistory,
     scrapePlatform,
     scrapeMultiple
   };

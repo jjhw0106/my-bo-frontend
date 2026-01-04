@@ -1,48 +1,70 @@
 <script setup lang="ts">
-import ScrapeButton from '~/components/domain/ScrapeButton.vue';
-import LoginModal from '~/components/domain/LoginModal.vue';
+  import ScrapeButton from '~/components/domain/ScrapeButton.vue';
+  import LoginModal from '~/components/domain/LoginModal.vue';
+  import { onMounted, computed } from 'vue';
 
-const route = useRoute();
-const { isScraping, scrapePlatform } = useScraper();
+  const route = useRoute();
+  const { isScraping, scrapePlatform, fetchHistory, historyData } = useScraper();
 
-// 플랫폼별 데이터 매핑
-const platformMap: Record<string, any> = {
-  wanted: { name: '원티드', color: 'blue', icon: 'W' },
-  jobkorea: { name: '잡코리아', color: 'indigo', icon: 'J' },
-  saramin: { name: '사람인', color: 'orange', icon: 'S' },
-  rallit: { name: '랠릿', color: 'green', icon: 'R' }
-};
+  // 1. 플랫폼 정보 설정
+  const platformMap: Record<string, any> = {
+    wanted: { name: '원티드', color: 'blue', icon: 'W' },
+    jobkorea: { name: '잡코리아', color: 'indigo', icon: 'J' },
+    saramin: { name: '사람인', color: 'orange', icon: 'S' },
+    rallit: { name: '랠릿', color: 'green', icon: 'R' }
+  };
 
-// URL 파라미터에서 플랫폼 ID 추출
-const platformId = computed(() => route.params.platform as string);
-const platformInfo = computed(() => platformMap[platformId.value] || { name: 'Unknown', color: 'gray', icon: '?' });
+  const platformId = computed(() => route.params.platform as string);
+  const platformInfo = computed(() => platformMap[platformId.value] || { name: 'Unknown', color: 'gray', icon: '?' });
 
-definePageMeta({
-  layout: 'dashboard'
-});
+  // 2. 데이터 필터링 (현재 플랫폼 데이터만)
+  const filteredHistory = computed(() => {
+    return historyData.value.filter((item: any) => item.platform === platformId.value);
+  });
 
-// 모달 상태
-const isModalOpen = ref(false);
+  // 3. 페이지 진입 시 데이터 로드
+  onMounted(async () => {
+    const savedId = localStorage.getItem('last_user_id');
+    if (savedId) {
+      console.log('기억된 아이디로 조회 시작:', savedId);
+      await fetchHistory(savedId);
+    }
+  });
 
-const handleScrapingClick = () => {
-  isModalOpen.value = true;
-};
+  definePageMeta({
+    layout: 'dashboard'
+  });
 
-const handleLoginSubmit = async (credentialsMap: Record<string, { id: string; pw: string }>) => {
-  isModalOpen.value = false;
-  
-  // 현재 플랫폼의 계정 정보 추출
-  const creds = credentialsMap[platformId.value];
-  if (creds) {
-    await scrapePlatform(platformId.value, platformInfo.value.name, creds);
-  }
-};
+  // 4. 모달 및 스크래핑 핸들러
+  const isModalOpen = ref(false);
 
-const handleManualLogin = async () => {
-  isModalOpen.value = false;
-  // 자격 증명 없이 호출 -> 백엔드에서 수동 로그인 대기 로직 실행
-  await scrapePlatform(platformId.value, platformInfo.value.name);
-};
+  const handleScrapingClick = () => {
+    isModalOpen.value = true;
+  };
+
+  const handleLoginSubmit = async (credentialsMap: Record<string, { id: string; pw: string }>) => {
+    isModalOpen.value = false;
+    const creds = credentialsMap[platformId.value];
+    if (creds) {
+      // 스크래핑 요청
+      await scrapePlatform(platformId.value, platformInfo.value.name, creds);
+      // 성공 시 해당 아이디를 로컬스토리지에 저장 (useScraper 내부에서 처리하도록 함)
+      localStorage.setItem('last_user_id', creds.id);
+      // 즉시 다시 조회
+      await fetchHistory(creds.id);
+    }
+  };
+
+  const handleManualLogin = async () => {
+    isModalOpen.value = false;
+    await scrapePlatform(platformId.value, platformInfo.value.name);
+    const savedId = localStorage.getItem('last_user_id');
+    if (savedId) await fetchHistory(savedId);
+  };
+
+  const excelDownload = () => {
+    useExcel().downloadAsExcel(filteredHistory.value, '지원현황');
+  } 
 </script>
 
 <template>
@@ -50,66 +72,62 @@ const handleManualLogin = async () => {
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-6">
       <div class="flex items-center gap-4">
-        <div 
-          class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold text-white shadow-lg shrink-0 transition-transform hover:scale-105"
-          :class="{
-            'bg-blue-600 shadow-blue-900/20': platformId === 'wanted',
-            'bg-indigo-600 shadow-indigo-900/20': platformId === 'jobkorea',
-            'bg-orange-600 shadow-orange-900/20': platformId === 'saramin',
-            'bg-green-600 shadow-green-900/20': platformId === 'rallit',
-            'bg-gray-600': !['wanted', 'jobkorea', 'saramin', 'rallit'].includes(platformId)
-          }"
-        >
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold text-white bg-indigo-600 shadow-lg shadow-indigo-900/20">
           {{ platformInfo.icon }}
         </div>
         <div>
-          <h1 class="text-3xl font-bold text-white flex items-center gap-2">
-            {{ platformInfo.name }} 
-            <span class="text-sm font-normal text-gray-500 bg-gray-800 px-2 py-0.5 rounded-full capitalize">{{ platformId }}</span>
-          </h1>
-          <p class="text-gray-400 mt-1">{{ platformInfo.name }} 플랫폼에서의 지원 현황 및 이력을 관리합니다.</p>
+          <h1 class="text-3xl font-bold text-white">{{ platformInfo.name }} 지원 현황</h1>
+          <p class="text-gray-400 mt-1">플랫폼에서 수집된 최신 지원 내역입니다.</p>
         </div>
       </div>
-
-      <!-- Scrape Button Component -->
-      <ScrapeButton 
-        :platform-id="platformId" 
-        :platform-info="platformInfo" 
-        :is-scraping="isScraping" 
-        @click="handleScrapingClick" 
-      />
-    </div>
-
-    <!-- Content Placeholder -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-       <!-- Stats Grid -->
-       <div class="glass-effect p-6 rounded-2xl border border-gray-800 space-y-1">
-          <p class="text-gray-400 text-sm">지원 완료</p>
-          <p class="text-3xl font-bold text-white">-</p>
-       </div>
-       <div class="glass-effect p-6 rounded-2xl border border-gray-800 space-y-1">
-          <p class="text-gray-400 text-sm">열람 확인</p>
-          <p class="text-3xl font-bold text-white">-</p>
-       </div>
-       <div class="glass-effect p-6 rounded-2xl border border-gray-800 space-y-1">
-          <p class="text-gray-400 text-sm">최종 업데이트</p>
-          <p class="text-3xl font-bold text-white">N/A</p>
-       </div>
-    </div>
-
-    <div class="glass-effect p-12 rounded-2xl border border-gray-800 text-center flex flex-col items-center justify-center space-y-4">
-      <div class="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center text-4xl grayscale opacity-50">
-        {{ platformInfo.icon }}
-      </div>
-      <div>
-        <h2 class="text-xl font-semibold text-white mb-2">데이터가 아직 수집되지 않았습니다.</h2>
-        <p class="text-gray-400 max-w-md">
-          상단의 <b>'정보 가져오기'</b> 버튼을 클릭하여 {{ platformInfo.name }} 계정으로부터 지원 이력을 동기화해 주세요.
-        </p>
+      <div class="flex flex-col items-end gap-2">
+        <ScrapeButton 
+          :platform-id="platformId" 
+          :platform-info="platformInfo" 
+          :is-scraping="isScraping" 
+          @click="handleScrapingClick" 
+        />
+        <button 
+          @click="excelDownload"
+          class="text-xs text-gray-500 hover:text-gray-300 flex items-center gap-1.5 transition-colors px-1"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          엑셀 다운로드
+        </button>
       </div>
     </div>
 
-    <!-- Login Modal -->
+    <!-- Data Table -->
+    <div v-if="filteredHistory.length > 0" class="glass-effect rounded-2xl border border-gray-800 overflow-hidden">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-gray-900/50 text-gray-400 font-semibold uppercase text-xs">
+          <tr>
+            <th class="px-6 py-4">지원일</th>
+            <th class="px-6 py-4">회사명</th>
+            <th class="px-6 py-4">포지션</th>
+            <th class="px-6 py-4">상태</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800 text-gray-300">
+          <tr v-for="item in filteredHistory" :key="item._id" class="hover:bg-gray-800/30">
+            <td class="px-6 py-4">{{ item.appliedAt }}</td>
+            <td class="px-6 py-4 text-white font-medium">{{ item.company }}</td>
+            <td class="px-6 py-4">{{ item.position }}</td>
+            <td class="px-6 py-4">
+              <span class="px-2 py-1 rounded-md bg-gray-800 text-xs">{{ item.status }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else class="glass-effect p-12 rounded-2xl border border-gray-800 text-center space-y-4">
+      <p class="text-gray-400">수집된 데이터가 없습니다. 상단 버튼을 눌러 스크래핑을 시작해 주세요.</p>
+    </div>
+
     <LoginModal 
       :is-open="isModalOpen" 
       :platforms="[{ id: platformId, name: platformInfo.name }]" 
