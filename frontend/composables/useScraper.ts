@@ -19,17 +19,25 @@ export const useScraper = () => {
   };
 
   const scrapePlatform = async (
-    platformId: string, 
-    platformName: string, 
+    appUserId: string,
+    platformId: string,
+    platformName: string,
     credentials?: { id: string; pw: string }
   ) => {
     isScraping.value = true;
     error.value = null;
 
     try {
+
+      const body = {
+        platformUserId: credentials?.id,
+        platformUserPw: credentials?.pw,
+        appUserId: appUserId,
+      }
+
       const response: any = await $fetch(`http://localhost:4000/scraper/${platformId}`, {
         method: 'POST',
-        body: credentials
+        body: body
       });
 
       if (response.success) {
@@ -54,17 +62,18 @@ export const useScraper = () => {
    * 여러 플랫폼을 순차적으로 또는 병렬로 스크래핑합니다.
    */
   const scrapeMultiple = async (
-    platforms: { id: string; name: string }[], 
+    appUserId: string,
+    platforms: { id: string; name: string }[],
     credentialsMap: Record<string, { id: string; pw: string }>
   ) => {
     isScraping.value = true;
     const results = [];
-    
+
     // 병렬 실행
-    const promises = platforms.map(p => 
-      scrapePlatform(p.id, p.name, credentialsMap[p.id])
+    const promises = platforms.map(p =>
+      scrapePlatform(appUserId, p.id, p.name, credentialsMap[p.id])
     );
-    
+
     const finalResults = await Promise.all(promises);
     isScraping.value = false;
     return finalResults;

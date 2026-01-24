@@ -10,8 +10,8 @@ definePageMeta({
     <div class="hero-section">
       <div class="badge">
         🚀 The Future of Stock Trading
-      </div>
-      
+    </div>
+
       <h1 class="hero-title">
         Trade Smarter with <br/>
         <span class="highlight-text">
@@ -38,15 +38,15 @@ definePageMeta({
       <div class="feature-card glass-effect group">
         <div class="icon-box">
           <span class="text-2xl">📊</span>
-        </div>
+            </div>
         <h3 class="card-title">Real-time Analytics</h3>
         <p class="card-desc">Advanced charting tools and live data feeds to keep you ahead.</p>
-      </div>
+          </div>
       
       <div class="feature-card glass-effect group">
         <div class="icon-box">
           <span class="text-2xl">🛡️</span>
-        </div>
+          </div>
         <h3 class="card-title">Secure Trading</h3>
         <p class="card-desc">Enterprise-grade security to protect your portfolio assets.</p>
       </div>

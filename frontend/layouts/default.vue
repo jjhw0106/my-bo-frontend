@@ -1,40 +1,11 @@
 <script setup lang="ts">
-const { user, logout } = useAuth();
-
-const handleLogout = async () => {
-  await logout();
-};
+import AppHeader from '~/components/layout/AppHeader.vue';
 </script>
 
 <template>
   <div class="layout-container">
     <!-- Top Navbar -->
-    <header class="navbar glass-effect">
-      <NuxtLink to="/">
-          <div class="brand">
-          <div class="logo">M</div>
-          <h1 class="title">My App</h1>
-        </div>
-      </NuxtLink>
-      
-      <nav class="nav-menu">
-        <NuxtLink to="/" class="nav-link">Home</NuxtLink>
-        <NuxtLink to="/stocks" class="nav-link">주식</NuxtLink>
-        <NuxtLink to="/my-career" class="nav-link">My-Career</NuxtLink>
-        
-        <!-- 로그인 상태에 따른 조건부 렌더링 -->
-        <div v-if="user" class="flex flex-col items-end gap-1">
-          <span class="text-sm font-medium text-foreground">{{ user.name }}님 환영합니다</span>
-          <button 
-            @click="handleLogout" 
-            class="text-xs text-muted-foreground hover:text-destructive transition-colors"
-          >
-            Logout
-          </button>
-        </div>
-        <NuxtLink v-else to="/login" class="btn-primary">로그인</NuxtLink>
-      </nav>
-    </header>
+    <AppHeader />
 
     <!-- Main Content -->
     <main class="main-content">
@@ -47,3 +18,17 @@ const handleLogout = async () => {
     </footer>
   </div>
 </template>
+
+<style scoped>
+.layout-container {
+  @apply min-h-screen bg-background flex flex-col relative overflow-hidden;
+}
+
+.main-content {
+  @apply flex-1 pt-24 px-4 pb-12 w-full max-w-7xl mx-auto z-10;
+}
+
+.footer {
+  @apply py-6 text-center text-sm text-muted-foreground border-t border-border mt-auto;
+}
+</style>

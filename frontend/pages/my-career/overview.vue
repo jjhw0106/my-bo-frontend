@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LoginModal from '~/components/domain/LoginModal.vue';
+import PlatformLoginModal from '~/components/domain/PlatformLoginModal.vue';
 
 definePageMeta({
   layout: 'dashboard'
@@ -26,9 +26,12 @@ const openSyncModal = () => {
 const handleSyncSubmit = async (credentialsMap: Record<string, { id: string; pw: string }>) => {
   isModalOpen.value = false;
   
-  // 전체 동기화 실행
+  // appUserId 가져오기
+  const appUserId = localStorage.getItem('last_user_id') || 'temp_app_user';
+
+  // 전체 동기화 실행 (appUserId 전달)
   const targetPlatforms = platforms.value.map(p => ({ id: p.id, name: p.name }));
-  const results = await scrapeMultiple(targetPlatforms, credentialsMap);
+  const results = await scrapeMultiple(appUserId, targetPlatforms, credentialsMap);
   
   const successCount = results.filter(r => r.success).length;
   alert(`${results.length} 중 ${successCount}개 플랫폼 동기화 완료`);
@@ -148,7 +151,7 @@ const getStatusClass = (status: string) => {
     </div>
 
     <!-- Login Modal -->
-    <LoginModal 
+    <PlatformLoginModal 
       :is-open="isModalOpen" 
       :platforms="platforms.map(p => ({ id: p.id, name: p.name }))" 
       @close="isModalOpen = false"

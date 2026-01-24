@@ -12,6 +12,8 @@ const form = ref({
 const handleLogin = async () => {
   const success = await login(form.value.email, form.value.password);
   if (success) {
+    // 앱 유저 ID 저장 (스크래핑 연동용)
+    localStorage.setItem('last_user_id', form.value.email);
     router.push('/');
   }
 };

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import ScrapeButton from '~/components/domain/ScrapeButton.vue';
   import SubButton from '~/components/domain/SubButton.vue';
-  import LoginModal from '~/components/domain/LoginModal.vue';
+  import PlatformLoginModal from '~/components/domain/PlatformLoginModal.vue';
   import { onMounted, computed } from 'vue';
 
   const route = useRoute();
@@ -17,19 +17,20 @@
 
   const platformId = computed(() => route.params.platform as string);
   const platformInfo = computed(() => platformMap[platformId.value] || { name: 'Unknown', color: 'gray', icon: '?' });
-  const totalApplications = computed(() => historyData.value.length);
-
+  
   // 2. 데이터 필터링 (현재 플랫폼 데이터만)
   const filteredHistory = computed(() => {
     return historyData.value.filter((item: any) => item.platform === platformId.value);
   });
 
+  const totalApplications = computed(() => historyData.value.length);
+  const platformTotal = computed(() => filteredHistory.value.length);
+
   // 3. 페이지 진입 시 데이터 로드
   onMounted(async () => {
-    const savedId = localStorage.getItem('last_user_platform_id');
-    if (savedId) {
-      console.log('기억된 아이디로 조회 시작:', savedId);
-      await fetchHistory(savedId);
+    const appUserId = localStorage.getItem('last_user_id');
+    if (appUserId) {
+      await fetchHistory(appUserId);
     }
   });
 
@@ -47,21 +48,23 @@
   const handleLoginSubmit = async (credentialsMap: Record<string, { id: string; pw: string }>) => {
     isModalOpen.value = false;
     const creds = credentialsMap[platformId.value];
+    const appUserId = localStorage.getItem('last_user_id') || 'temp_app_user';
+
     if (creds) {
       // 스크래핑 요청
-      await scrapePlatform(platformId.value, platformInfo.value.name, creds);
-      // 성공 시 해당 아이디를 로컬스토리지에 저장 (useScraper 내부에서 처리하도록 함)
-      localStorage.setItem('last_user_platform_id', creds.id);
-      // 즉시 다시 조회
-      await fetchHistory(creds.id);
+      await scrapePlatform(appUserId, platformId.value, platformInfo.value.name, creds);
+      
+      // 조회: 항상 appUserId로 전체 내역 조회
+      await fetchHistory(appUserId);
     }
   };
 
   const handleManualLogin = async () => {
     isModalOpen.value = false;
-    await scrapePlatform(platformId.value, platformInfo.value.name);
-    const savedId = localStorage.getItem('last_user_platform_id');
-    if (savedId) await fetchHistory(savedId);
+    const appUserId = localStorage.getItem('last_user_id') || 'temp_app_user';
+    await scrapePlatform(appUserId, platformId.value, platformInfo.value.name);
+    // 조회: 항상 appUserId로 전체 내역 조회
+    await fetchHistory(appUserId);
   };
 
   const excelDownload = () => {
@@ -97,8 +100,16 @@
       </div>
     </div>
 
-    <div>
-      <p>총 지원 횟수: {{ totalApplications }}</p>
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="glass-effect p-6 rounded-2xl border border-gray-800 space-y-2">
+        <p class="text-gray-400 text-sm">{{ platformInfo.name }} 지원 건수</p>
+        <p class="text-4xl font-bold text-white">{{ platformTotal }} <span class="text-base font-normal text-gray-500">건</span></p>
+      </div>
+      <div class="glass-effect p-6 rounded-2xl border border-gray-800 space-y-2">
+        <p class="text-gray-400 text-sm">전체 플랫폼 총 지원 건수</p>
+        <p class="text-4xl font-bold text-white">{{ totalApplications }} <span class="text-base font-normal text-gray-500">건</span></p>
+      </div>
     </div>
 
     <!-- Data Table -->
@@ -130,7 +141,7 @@
       <p class="text-gray-400">수집된 데이터가 없습니다. 상단 버튼을 눌러 스크래핑을 시작해 주세요.</p>
     </div>
 
-    <LoginModal 
+    <PlatformLoginModal 
       :is-open="isModalOpen" 
       :platforms="[{ id: platformId, name: platformInfo.name }]" 
       @close="isModalOpen = false"
