@@ -1,8 +1,10 @@
+// 함수 외부로 이동하여 모든 useScraper 호출이 동일한 상태를 공유하도록 함
+const isScraping = ref(false);
+const error = ref<string | null>(null);
+const scrapedResults = ref<Record<string, any>>({});
+const historyData = ref<any[]>([]);
+
 export const useScraper = () => {
-  const isScraping = ref(false);
-  const error = ref<string | null>(null);
-  const scrapedResults = ref<Record<string, any>>({});
-  const historyData = ref<any[]>([]);
 
   const fetchHistory = async (userId: string) => {
     isScraping.value = true;

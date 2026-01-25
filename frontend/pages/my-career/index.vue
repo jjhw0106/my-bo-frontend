@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { fetchHistory } = useScraper();
 definePageMeta({
   middleware: [
     function (to, from) {
@@ -6,4 +7,5 @@ definePageMeta({
     }
   ]
 });
+
 </script>

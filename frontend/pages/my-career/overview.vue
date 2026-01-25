@@ -1,21 +1,29 @@
 <script setup lang="ts">
 import PlatformLoginModal from '~/components/domain/PlatformLoginModal.vue';
+import SubButton from '~/components/domain/SubButton.vue';
 
 definePageMeta({
   layout: 'dashboard'
 });
 
-const { isScraping, scrapeMultiple } = useScraper();
-
+const { isScraping, scrapeMultiple, historyData, fetchHistory } = useScraper();
 // 모달 상태
 const isModalOpen = ref(false);
 
-// 샘플 데이터: 플랫폼별 상태
-const platforms = ref([
-  { id: 'wanted', name: '원티드', status: 'connected', count: 12, icon: 'https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Ffavicon%2F144x144.png&w=64&q=75' },
-  { id: 'jobkorea', name: '잡코리아', status: 'connected', count: 8, icon: 'https://www.jobkorea.co.kr/favicon.ico' },
+// 1. platforms를 computed로 변경하여 historyData 변경 시 자동 반영
+const platforms = computed(() => [
+  { id: 'wanted', name: '원티드', status: 'connected', count: historyData.value.filter((item) => item.platform === 'wanted').length, icon: 'https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Ffavicon%2F144x144.png&w=64&q=75' },
+  { id: 'jobkorea', name: '잡코리아', status: 'connected', count: historyData.value.filter((item) => item.platform === 'jobkorea').length, icon: 'https://www.jobkorea.co.kr/favicon.ico' },
   { id: 'saramin', name: '사람인', status: 'error', count: '-', icon: 'https://www.saramin.co.kr/favicon.ico' }
 ]);
+
+// 2. 페이지 진입 시 데이터 로드
+onMounted(async () => {
+  const appUserId = localStorage.getItem('last_user_id');
+  if (appUserId) {
+    await fetchHistory(appUserId);
+  }
+});
 
 // 전체 동기화 버튼 클릭 시
 const openSyncModal = () => {
@@ -38,13 +46,14 @@ const handleSyncSubmit = async (credentialsMap: Record<string, { id: string; pw:
 };
 
 // 샘플 데이터: 지원 내역
-const applications = ref([
-  { id: 101, company: '비바리퍼블리카 (Toss)', role: 'Frontend Developer', platform: '원티드', status: '서류통과', date: '2025.12.24' },
-  { id: 102, company: '당근마켓', role: 'Software Engineer', platform: '원티드', status: '지원완료', date: '2025.12.23' },
-  { id: 103, company: '우아한형제들', role: 'Web Front-end', platform: '잡코리아', status: '열람', date: '2025.12.22' },
-  { id: 104, company: '쿠팡', role: 'UX Engineer', platform: '사람인', status: '불합격', date: '2025.12.20' },
-  { id: 105, company: '네이버', role: 'Platform Tech', platform: '잡코리아', status: '면접대기', date: '2025.12.18' }
-]);
+const applications = computed(() => historyData.value.map((item) => ({
+  id: item.id,
+  company: item.company,
+  position: item.position,
+  platform: item.platform,
+  status: item.status,
+  appliedAt: item.appliedAt
+})));
 
 // 상태에 따른 배지 스타일
 const getStatusClass = (status: string) => {
@@ -67,17 +76,25 @@ const getStatusClass = (status: string) => {
           모든 채용 플랫폼의 지원 내역을 이곳에서 한눈에 관리하세요.
         </p>
       </div>
-      
-      <button 
-        @click="openSyncModal"
-        :disabled="isScraping"
-        class="group relative flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(37,99,235,0.4)]"
-      >
-        <span v-if="isScraping" class="animate-spin text-lg">↻</span>
-        <span v-else class="text-lg group-hover:scale-110 transition-transform">⚡</span>
-        <span>{{ isScraping ? '데이터 동기화 중...' : '전체 동기화 실행' }}</span>
-      </button>
+      <div>
+        <div class="flex flex-col items-end gap-2">
+          <button 
+            @click="openSyncModal"
+            :disabled="isScraping"
+            class="group relative flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(37,99,235,0.4)]"
+          >
+            <span v-if="isScraping" class="animate-spin text-lg">↻</span>
+            <span v-else class="text-lg group-hover:scale-110 transition-transform">⚡</span>
+            <span>{{ isScraping ? '데이터 동기화 중...' : '전체 동기화 실행' }}</span>
+          </button>
+          <SubButton 
+              label="엑셀 다운로드"
+              :disabled="historyData.length === 0"
+              @click="useExcel().downloadAsExcel(historyData, '지원현황');"
+            />
+      </div>
     </div>
+  </div>
 
     <!-- 2. Platform Status Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -99,7 +116,7 @@ const getStatusClass = (status: string) => {
             <span v-else class="h-2.5 w-2.5 rounded-full bg-red-500"></span>
           </div>
           <p class="text-sm text-gray-400 mt-1">
-            {{ pf.status === 'connected' ? `최근 지원: ${pf.count}건` : '연동 확인 필요' }}
+            {{ pf.status === 'connected' ? `최근 지원: ${pf.count}건` : '연동 확인 필요(미구현)' }}
           </p>
         </div>
       </div>
@@ -129,7 +146,7 @@ const getStatusClass = (status: string) => {
                 {{ app.company }}
               </td>
               <td class="px-6 py-4 text-gray-300">
-                {{ app.role }}
+                {{ app.position }}
               </td>
               <td class="px-6 py-4">
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
@@ -142,7 +159,7 @@ const getStatusClass = (status: string) => {
                 </span>
               </td>
               <td class="px-6 py-4 text-right text-gray-500 tabular-nums">
-                {{ app.date }}
+                {{ app.appliedAt }}
               </td>
             </tr>
           </tbody>

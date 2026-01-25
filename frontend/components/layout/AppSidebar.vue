@@ -11,8 +11,6 @@ const props =defineProps<{
   }>
 }>();
 
-// const props = defineProps<{ menuItems: Array<{ name: string; path: string; icon?: string; children?: Array<{ name: string; path: string }> }> }>();
-
 const route = useRoute();
 const expandedMenus = ref<Record<string, boolean>>({});
 
