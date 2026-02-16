@@ -39,6 +39,36 @@ export const useAuth = () => {
 
   };
 
+  // 회원가입 (API 연동)
+  const signup = async (email: string, password: string, nickName: string) => {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      // 회원가입 API 호출
+      await $fetch(`${config.public.apiBase}/auth/sign-up`, {
+        method: 'POST',
+        body: { email, password, nickName },
+        credentials: 'include'
+      });
+
+      // 성공 시 자동 로그인
+      const loginSuccess = await login(email, password);
+      return loginSuccess;
+    } catch (e: any) {
+      if (e.status === 409) {
+        error.value = '이미 사용 중인 이메일입니다';
+      } else if (e.data?.message) {
+        error.value = e.data.message;
+      } else {
+        error.value = '회원가입 실패';
+      }
+      return false;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const logout = () => {
     user.value = null; // 쿠키 삭제
     localStorage.clear()
@@ -51,6 +81,7 @@ export const useAuth = () => {
     loading,
     error,
     login,
+    signup,
     logout
   };
 };

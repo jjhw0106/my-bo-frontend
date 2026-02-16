@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LoginForm from '~/components/domain/LoginForm.vue';
+import SignupForm from '~/components/domain/SignupForm.vue';
 
 definePageMeta({
   layout: 'default'
@@ -7,13 +7,13 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="login-page">
-    <LoginForm />
+  <div class="signup-page">
+    <SignupForm />
   </div>
 </template>
 
 <style scoped>
-.login-page {
+.signup-page {
   @apply flex items-center justify-center min-h-[calc(100vh-10rem)] w-full px-4;
 }
 </style>
