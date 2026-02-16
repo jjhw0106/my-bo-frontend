@@ -1,6 +1,0 @@
-refactor(fe): 플랫폼별 통계 비교 기능 고도화 및 커리어 오버뷰 대시보드 완성
-
-- [platform].vue: 개별 플랫폼 vs 전체 통합 통계 비교 UI(Stats Grid) 구현
-- index.vue: 전 플랫폼 통합 지원 현황을 보여주는 Career Overview 화면 구축
-- useScraper: appUserId 중심의 API 호출 규격 확정 및 인자 전달 오류 수정
-- useAuth: 로그아웃 로직 버그(localStorage.clear) 수정 및 세션 관리 개선
