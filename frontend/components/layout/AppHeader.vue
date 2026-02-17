@@ -18,8 +18,8 @@ const handleLogout = async () => {
     <nav class="nav-menu">
       <NuxtLink to="/" class="nav-link">Home</NuxtLink>
       <NuxtLink to="/stocks" class="nav-link">주식</NuxtLink>
-      <NuxtLink to="/lotto/dashboard" 
-                class="nav-link" 
+      <NuxtLink to="/lotto"
+                class="nav-link"
                 :class="{'router-link-active': $route.path.startsWith('/lotto')}">로또
       </NuxtLink>
       <NuxtLink to="/my-career/overview" 
