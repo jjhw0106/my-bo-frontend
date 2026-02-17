@@ -5,7 +5,7 @@ import AppSidebar from '~/components/layout/AppSidebar.vue';
 const route = useRoute();
 
 // 메뉴 정의 (계층 구조 적용)
-const myCareerMenuItems = [
+const sidebarMenuItems = [
   { 
     name: 'My Career', 
     path: '/my-career', // 상위 경로는 children이 있을 경우 토글 용도로 사용됨
@@ -15,6 +15,14 @@ const myCareerMenuItems = [
       { name: 'Wanted', path: '/my-career/wanted' },
       { name: 'JobKorea', path: '/my-career/jobkorea' },
       { name: 'Saramin', path: '/my-career/saramin' },
+    ]
+  },
+  {
+    name: 'Lotto',
+    path: '/lotto',
+    icon: '🎰',
+    children: [
+      { name: '번호 추천', path: '/lotto' },
     ]
   },
   { 
@@ -30,7 +38,7 @@ const expandedMenus = ref<Record<string, boolean>>({});
 
 // 초기 로딩 시 현재 경로에 맞는 메뉴 열기
 const initExpandedMenu = () => {
-  myCareerMenuItems.forEach(item => {
+  sidebarMenuItems.forEach(item => {
     if (item.children && route.path.startsWith(item.path)) {
       expandedMenus.value[item.name] = true;
     }
@@ -50,7 +58,7 @@ const toggleMenu = (itemName: string) => {
 
 // 현재 페이지 타이틀 계산 (Recursive)
 const pageTitle = computed(() => {
-  for (const item of myCareerMenuItems) {
+  for (const item of sidebarMenuItems) {
     // 1. 하위 메뉴 매칭 확인
     if (item.children) {
       const activeChild = item.children.find(child => route.path === child.path); // 정확히 일치 우선
@@ -83,7 +91,7 @@ const isExactActive = (path: string) => route.path === path;
 
     <div class="flex flex-1 overflow-hidden pt-16">
       
-      <AppSidebar :menuItems="myCareerMenuItems" class="fixed left-0 top-16 bottom-0" />
+      <AppSidebar :menuItems="sidebarMenuItems" class="fixed left-0 top-16 bottom-0" />
 
       <div class="flex-1 flex flex-col overflow-hidden md:pl-64">
         

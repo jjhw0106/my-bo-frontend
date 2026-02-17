@@ -9,4 +9,10 @@ export default defineNuxtConfig({
       apiBase: 'http://localhost:8080',
     },
   },
+  nitro: {
+    routeRules: {
+      '/auth/**': { proxy: 'http://localhost:8080/auth/**' },
+      '/resume/**': { proxy: 'http://localhost:8080/resume/**' },
+    },
+  },
 })

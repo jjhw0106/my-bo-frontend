@@ -59,6 +59,15 @@ definePageMeta({
         <h3 class="card-title">Lightning Fast</h3>
         <p class="card-desc">Optimized infrastructure ensures zero latency execution.</p>
       </div>
+
+      <!-- Lotto Service Card -->
+      <NuxtLink to="/lotto" class="feature-card glass-effect group hover:border-blue-500/50 transition-all">
+        <div class="icon-box group-hover:bg-blue-500/20 transition-colors">
+          <span class="text-2xl">🎰</span>
+        </div>
+        <h3 class="card-title">Lotto 번호 추천</h3>
+        <p class="card-desc">다양한 전략으로 행운의 번호를 추천받아보세요.</p>
+      </NuxtLink>
     </div>
   </div>
 </template>
