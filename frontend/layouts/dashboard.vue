@@ -25,10 +25,14 @@ const sidebarMenuItems = [
       { name: '번호 추천', path: '/lotto' },
     ]
   },
-  { 
-    name: 'Settings', 
-    path: '/settings', 
-    icon: '⚙️' // Gear
+  {
+    name: 'Settings',
+    path: '/settings',
+    icon: '⚙️', // Gear
+    children: [
+      { name: 'My Profile', path: '/settings/my-profile' },
+      { name: 'Auth Manage', path: '/settings/auth-manage' },
+    ]
   }
 ];
 
