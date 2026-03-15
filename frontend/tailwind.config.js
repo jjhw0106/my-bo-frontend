@@ -2,6 +2,7 @@
 module.exports = {
   content: [
     "./components/**/*.{js,vue,ts}",
+    "../../lotto-app/layers/lotto-ui/components/**/*.{js,vue,ts}",
     "./layouts/**/*.vue",
     "./pages/**/*.vue",
     "./plugins/**/*.{js,ts}",

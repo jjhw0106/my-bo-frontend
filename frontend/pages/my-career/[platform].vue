@@ -75,30 +75,29 @@
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-6">
-      <div class="flex items-center gap-4">
-        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold text-white bg-indigo-600 shadow-lg shadow-indigo-900/20">
-          {{ platformInfo.icon }}
+    <PageHeader
+      :title="`${platformInfo.name} 지원 현황`"
+      description="플랫폼에서 수집된 최신 지원 내역입니다."
+      :icon="platformInfo.icon"
+      :icon-bg="`bg-${platformInfo.color}-600 shadow-${platformInfo.color}-900/20`"
+    >
+      <template #actions>
+        <div class="flex items-center gap-2">
+          <ScrapeButton
+            :platform-id="platformId"
+            :platform-info="platformInfo"
+            :is-scraping="isScraping"
+            @click="handleScrapingClick"
+          />
+          <SubButton
+            label="엑셀 다운로드"
+            color="green"
+            :disabled="filteredHistory.length === 0"
+            @click="excelDownload"
+          />
         </div>
-        <div>
-          <h1 class="text-3xl font-bold text-white">{{ platformInfo.name }} 지원 현황</h1>
-          <p class="text-gray-400 mt-1">플랫폼에서 수집된 최신 지원 내역입니다.</p>
-        </div>
-      </div>
-      <div class="flex flex-col items-end gap-2">
-        <ScrapeButton 
-          :platform-id="platformId" 
-          :platform-info="platformInfo" 
-          :is-scraping="isScraping" 
-          @click="handleScrapingClick" 
-        />
-        <SubButton 
-          label="엑셀 다운로드"
-          :disabled="filteredHistory.length === 0"
-          @click="excelDownload"
-        />
-      </div>
-    </div>
+      </template>
+    </PageHeader>
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

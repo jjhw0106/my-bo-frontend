@@ -69,32 +69,28 @@ const getStatusClass = (status: string) => {
 <template>
   <div class="space-y-8">
     <!-- 1. Header & Actions -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-      <div>
-        <h1 class="text-3xl font-bold tracking-tight text-white">Career Dashboard</h1>
-        <p class="text-gray-400 mt-1">
-          모든 채용 플랫폼의 지원 내역을 이곳에서 한눈에 관리하세요.
-        </p>
-      </div>
-      <div>
-        <div class="flex flex-col items-end gap-2">
-          <button 
-            @click="openSyncModal"
+    <PageHeader title="Career Dashboard" description="모든 채용 플랫폼의 지원 내역을 이곳에서 한눈에 관리하세요.">
+      <template #actions>
+        <div class="flex items-center gap-2">
+          <SubButton
+            :label="isScraping ? '데이터 동기화 중...' : '전체 동기화 실행'"
             :disabled="isScraping"
-            class="group relative flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(37,99,235,0.4)]"
+            @click="openSyncModal"
           >
-            <span v-if="isScraping" class="animate-spin text-lg">↻</span>
-            <span v-else class="text-lg group-hover:scale-110 transition-transform">⚡</span>
-            <span>{{ isScraping ? '데이터 동기화 중...' : '전체 동기화 실행' }}</span>
-          </button>
-          <SubButton 
-              label="엑셀 다운로드"
-              :disabled="historyData.length === 0"
-              @click="useExcel().downloadAsExcel(historyData, '지원현황');"
-            />
-      </div>
-    </div>
-  </div>
+            <template #icon>
+              <span v-if="isScraping" class="animate-spin">↻</span>
+              <span v-else>⚡</span>
+            </template>
+          </SubButton>
+          <SubButton
+            label="엑셀 다운로드"
+            color="green"
+            :disabled="historyData.length === 0"
+            @click="useExcel().downloadAsExcel(historyData, '지원현황');"
+          />
+        </div>
+      </template>
+    </PageHeader>
 
     <!-- 2. Platform Status Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

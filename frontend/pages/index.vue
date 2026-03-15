@@ -27,7 +27,7 @@ definePageMeta({
         <NuxtLink to="/stocks" class="btn-start">
           Start Trading Now
         </NuxtLink>
-        <NuxtLink to="/login" class="btn-demo glass-effect">
+        <NuxtLink to="/auth/login" class="btn-demo glass-effect">
           View Demo
         </NuxtLink>
       </div>
@@ -35,38 +35,28 @@ definePageMeta({
 
     <!-- Feature Grid -->
     <div class="feature-grid">
-      <div class="feature-card glass-effect group">
-        <div class="icon-box">
-          <span class="text-2xl">📊</span>
-            </div>
-        <h3 class="card-title">Real-time Analytics</h3>
-        <p class="card-desc">Advanced charting tools and live data feeds to keep you ahead.</p>
-          </div>
-      
-      <div class="feature-card glass-effect group">
-        <div class="icon-box">
-          <span class="text-2xl">🛡️</span>
-          </div>
-        <h3 class="card-title">Secure Trading</h3>
-        <p class="card-desc">Enterprise-grade security to protect your portfolio assets.</p>
-      </div>
-      
-      <div class="feature-card glass-effect group">
-        <div class="icon-box">
-          <span class="text-2xl">⚡</span>
-        </div>
-        
-        <h3 class="card-title">Lightning Fast</h3>
-        <p class="card-desc">Optimized infrastructure ensures zero latency execution.</p>
-      </div>
-
-      <!-- Lotto Service Card -->
-      <NuxtLink to="/lotto" class="feature-card glass-effect group hover:border-blue-500/50 transition-all">
+      <NuxtLink to="/my-apps" class="feature-card glass-effect group hover:border-blue-500/50 transition-all">
         <div class="icon-box group-hover:bg-blue-500/20 transition-colors">
-          <span class="text-2xl">🎰</span>
+          <span class="text-2xl">📦</span>
         </div>
-        <h3 class="card-title">Lotto 번호 추천</h3>
-        <p class="card-desc">다양한 전략으로 행운의 번호를 추천받아보세요.</p>
+        <h3 class="card-title">My Apps</h3>
+        <p class="card-desc">내가 개발한 정적 페이지를 다운로드 받아보세요.</p>
+      </NuxtLink>
+
+      <NuxtLink to="/my-career/overview" class="feature-card glass-effect group hover:border-blue-500/50 transition-all">
+        <div class="icon-box group-hover:bg-blue-500/20 transition-colors">
+          <span class="text-2xl">💼</span>
+        </div>
+        <h3 class="card-title">My Career</h3>
+        <p class="card-desc">채용 플랫폼 지원 내역을 한눈에 관리하세요.</p>
+      </NuxtLink>
+
+      <NuxtLink to="/settings" class="feature-card glass-effect group hover:border-blue-500/50 transition-all">
+        <div class="icon-box group-hover:bg-blue-500/20 transition-colors">
+          <span class="text-2xl">⚙️</span>
+        </div>
+        <h3 class="card-title">Management</h3>
+        <p class="card-desc">프로필, 알림, 접근 권한 등을 설정합니다.</p>
       </NuxtLink>
     </div>
   </div>

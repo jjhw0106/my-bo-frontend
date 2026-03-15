@@ -17,19 +17,22 @@ const handleLogout = async () => {
     
     <nav class="nav-menu">
       <NuxtLink to="/" class="nav-link">Home</NuxtLink>
-      <NuxtLink to="/stocks" class="nav-link">주식</NuxtLink>
-      <NuxtLink to="/lotto"
+      <NuxtLink to="/my-apps"
                 class="nav-link"
-                :class="{'router-link-active': $route.path.startsWith('/lotto')}">로또
+                :class="{'router-link-active': $route.path.startsWith('/my-apps')}">My Apps
       </NuxtLink>
-      <NuxtLink to="/my-career/overview" 
-                class="nav-link" 
+      <NuxtLink to="/my-career/overview"
+                class="nav-link"
                 :class="{'router-link-active': $route.path.startsWith('/my-career')}">My-Career
       </NuxtLink>
-      
+      <NuxtLink to="/settings"
+                class="nav-link"
+                :class="{'router-link-active': $route.path.startsWith('/settings')}">Settings
+      </NuxtLink>
+
       <!-- 로그인 상태에 따른 조건부 렌더링 -->
       <div v-if="user" class="flex flex-col items-end gap-1">
-        <span class="text-sm font-medium text-foreground">{{ user.name }}님 환영합니다</span>
+        <span class="text-sm font-medium text-foreground">{{ user.name }}님 환영합니다.</span>
         <button 
           @click="handleLogout" 
           class="text-xs text-muted-foreground hover:text-destructive transition-colors"
@@ -37,7 +40,7 @@ const handleLogout = async () => {
           Logout
         </button>
       </div>
-      <NuxtLink v-else to="/login" class="btn-primary">로그인</NuxtLink>
+      <NuxtLink v-else to="/auth/login" class="btn-primary">로그인</NuxtLink>
     </nav>
   </header>
 </template>

@@ -8,12 +8,12 @@ export default defineNuxtRouteMiddleware((to, from) => {
     // 3. 로그인이 안 되어 있다면 로그인 페이지로 리다이렉트
     if (!user.value) {
       // 로그인 후 원래 페이지로 돌아오기 위해 redirect 파라미터 추가 가능 (선택 사항)
-      return navigateTo('/login');
+      return navigateTo('/auth/login');
     }
   }
 
   // (선택 사항) 이미 로그인한 유저가 로그인 페이지에 접근하려 할 때 홈으로 보냄
-  if (to.path === '/login' && user.value) {
+  if (to.path === '/auth/login' && user.value) {
     return navigateTo('/');
   }
 });

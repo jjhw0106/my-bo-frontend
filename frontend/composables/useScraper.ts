@@ -9,7 +9,7 @@ export const useScraper = () => {
   const fetchHistory = async (userId: string) => {
     isScraping.value = true;
     try {
-      const response: any = await $fetch(`http://localhost:4000/scraper/history/${userId}`);
+      const response: any = await $fetch(`http://localhost:8080/scraper/history/${userId}`);
       historyData.value = response || [];
       return response;
     } catch (err) {
@@ -37,7 +37,7 @@ export const useScraper = () => {
         appUserId: appUserId,
       }
 
-      const response: any = await $fetch(`http://localhost:4000/scraper/${platformId}`, {
+      const response: any = await $fetch(`http://localhost:8080/scraper/${platformId}`, {
         method: 'POST',
         body: body
       });

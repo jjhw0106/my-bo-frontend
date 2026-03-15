@@ -67,7 +67,7 @@ const handleLogin = async () => {
       <!-- Signup Link -->
       <div class="text-center text-sm text-muted-foreground">
         계정이 없으신가요?
-        <NuxtLink to="/signup" class="text-primary hover:underline ml-1">
+        <NuxtLink to="/auth/signup" class="text-primary hover:underline ml-1">
           회원가입
         </NuxtLink>
       </div>

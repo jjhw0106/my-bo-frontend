@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  extends: ['../../lotto-app'],
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss'],
@@ -14,6 +13,7 @@ export default defineNuxtConfig({
     routeRules: {
       '/auth/**': { proxy: 'http://localhost:8080/auth/**' },
       '/resume/**': { proxy: 'http://localhost:8080/resume/**' },
+      '/my-app-items/**': { proxy: 'http://localhost:8080/my-app-items/**' },
     },
   },
 })

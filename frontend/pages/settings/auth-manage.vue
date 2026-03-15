@@ -13,7 +13,7 @@ const managedRoutes = [
   { path: '/admin', label: 'Admin', icon: '🔑' },
   { path: '/my-career', label: 'My Career', icon: '💼' },
   { path: '/settings', label: 'Settings', icon: '⚙️' },
-  { path: '/lotto', label: 'Lotto', icon: '🎰' },
+  { path: '/my-apps', label: 'My Apps', icon: '📦' },
 ];
 
 const isRouteProtected = (path: string) => {
@@ -24,11 +24,7 @@ const isRouteProtected = (path: string) => {
 <template>
   <div class="max-w-4xl space-y-8">
 
-    <!-- Header -->
-    <div>
-      <h1 class="text-3xl font-bold tracking-tight text-white">Auth Manage</h1>
-      <p class="text-gray-400 mt-1">각 페이지의 로그인 필요 여부를 설정합니다.</p>
-    </div>
+    <PageHeader title="Auth Manage" description="각 페이지의 로그인 필요 여부를 설정합니다." />
 
     <!-- Route Permission List -->
     <section class="glass-effect rounded-2xl border border-gray-800 p-6 space-y-6">

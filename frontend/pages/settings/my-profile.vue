@@ -38,11 +38,7 @@ const handleLogout = async () => {
 <template>
   <div class="max-w-4xl space-y-8">
 
-    <!-- Header -->
-    <div>
-      <h1 class="text-3xl font-bold tracking-tight text-white">My Profile</h1>
-      <p class="text-gray-400 mt-1">계정 정보 및 애플리케이션 환경을 설정합니다.</p>
-    </div>
+    <PageHeader title="My Profile" description="계정 정보 및 애플리케이션 환경을 설정합니다." />
 
     <!-- 1. Profile Section -->
     <section class="glass-effect rounded-2xl border border-gray-800 p-6 space-y-6">

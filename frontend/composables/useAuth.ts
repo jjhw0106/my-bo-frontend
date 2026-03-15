@@ -26,8 +26,9 @@ export const useAuth = () => {
       });
 
       // 성공 시 사용자 정보 업데이트 (쿠키에 저장됨)
-      user.value = { email: data as string, name: 'User' };
-      localStorage.setItem('last_user_id', data as string);
+      const res = data as { email: string; nickname: string; role: string };
+      user.value = { email: res.email, name: res.nickname, role: res.role };
+      localStorage.setItem('last_user_id', res.email);
       return true;
     } catch (e: any) {
       // 에러 처리
@@ -72,7 +73,7 @@ export const useAuth = () => {
   const logout = () => {
     user.value = null; // 쿠키 삭제
     localStorage.clear()
-    return navigateTo('/login');
+    return navigateTo('/auth/login');
   };
 
   return {

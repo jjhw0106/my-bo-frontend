@@ -18,11 +18,12 @@ const sidebarMenuItems = [
     ]
   },
   {
-    name: 'Lotto',
-    path: '/lotto',
-    icon: '🎰',
+    name: 'My Apps',
+    path: '/my-apps',
+    icon: '📦',
     children: [
-      { name: '번호 추천', path: '/lotto' },
+      { name: 'App List', path: '/my-apps' },
+      { name: 'App 등록', path: '/my-apps/register' },
     ]
   },
   {

@@ -127,7 +127,7 @@ const handleSignup = async () => {
       <!-- Login Link -->
       <div class="text-center text-sm text-muted-foreground">
         이미 계정이 있으신가요?
-        <NuxtLink to="/login" class="text-primary hover:underline ml-1">
+        <NuxtLink to="/auth/login" class="text-primary hover:underline ml-1">
           로그인
         </NuxtLink>
       </div>
