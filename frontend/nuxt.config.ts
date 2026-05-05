@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const apiBase = process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:9001'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -6,14 +8,14 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:8080',
+      apiBase: "http://localhost:9001",
     },
   },
   nitro: {
     routeRules: {
-      '/auth/**': { proxy: 'http://localhost:8080/auth/**' },
-      '/resume/**': { proxy: 'http://localhost:8080/resume/**' },
-      '/my-app-items/**': { proxy: 'http://localhost:8080/my-app-items/**' },
+      '/auth/**': { proxy: `${process.env.NUXT_PUBLIC_API_BASE}/auth/**` },
+      '/resume/**': { proxy: `${process.env.NUXT_PUBLIC_API_BASE}/resume/**` },
+      '/my-app-items/**': { proxy: `${process.env.NUXT_PUBLIC_API_BASE}/my-app-items/**` },
     },
   },
 })
